@@ -28,6 +28,7 @@ import java.util.regex.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 
+import org.gps.air.receiver.Impl.TardyYetReliableAudioOutputQueue;
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.*;
@@ -125,7 +126,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler {
 			final RaopRtpPacket.Audio audioPacket = (RaopRtpPacket.Audio)evt.getMessage();
 
 			/* Get audio output queue from the enclosing RaopAudioHandler */
-			AudioOutputQueue audioOutputQueue;
+			TardyYetReliableAudioOutputQueue audioOutputQueue;
 			synchronized(RaopAudioHandler.this) {
 				audioOutputQueue = m_audioOutputQueue;
 			}
@@ -168,7 +169,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler {
 	private final ChannelHandler m_audioEnqueueHandler = new RaopRtpAudioEnqueueHandler();
 
 	private AudioStreamInformationProvider m_audioStreamInformationProvider;
-	private AudioOutputQueue m_audioOutputQueue;
+	private TardyYetReliableAudioOutputQueue m_audioOutputQueue;
 
 	/**
 	 * All RTP channels belonging to this RTSP connection
@@ -433,7 +434,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler {
 		m_audioDecodeHandler = handler;
 
 		/* Create audio output queue with the format information provided by the ALAC decoder */
-		m_audioOutputQueue = new AudioOutputQueue(m_audioStreamInformationProvider);
+		m_audioOutputQueue = new TardyYetReliableAudioOutputQueue(m_audioStreamInformationProvider);
 
 		/* Create timing handle, using the AudioOutputQueue as time source */
 		m_timingHandler = new RaopRtpTimingHandler(m_audioOutputQueue);
