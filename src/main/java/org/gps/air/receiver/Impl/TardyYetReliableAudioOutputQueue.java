@@ -285,7 +285,7 @@ public class TardyYetReliableAudioOutputQueue implements AudioClock {
 
         private final int FRAME_BUFFER = 300;
 
-        private final int DROP_FRAMES_WHEN_OVER_SECONDS = 20; // If 20secs too late, we'll clear queue.
+        private final int DROP_FRAMES_WHEN_OVER_SECONDS = 300; // If 300secs too late, we'll clear queue.
 
         private CountDownLatch countDownLatch = new CountDownLatch(FRAME_BUFFER);
 
