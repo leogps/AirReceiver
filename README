@@ -1,5 +1,30 @@
 AirReceiver
 ===========
+
+Paul Gundarapu
+Jun 2014
+
+Added new AudioQueue implementation to make it work on Raspberry Pi.
+The trade off here is that we see latency in the Audio and thereby may
+not be suitable for video viewing. However, audio seems to work fine on
+Pi, tested with 1000MHz CPU overclocked freq (headless with no hdmi
+connection). Pi was very much responsive at all the times.
+
+Implementation Detail:
+1. We wait for a 300 frame buffer to fill before writing to the line.
+2. A new LinkedSortedQueue is implemented that would work with the
+order in which data is typically streamed. Queue is made completely thread-safe.
+3. If the gap frames exceed 300secs, we clear the Queue i.e., drop all
+packets received so far.
+
+The new implementation decreased the processing power to all the way
+of utilizing only 45% to 50% on Pi. Having said that if the line has too much
+re-transmission, the older frames will be retransmitted later and the stream
+insertion into the Queue will take longer, i.e., more processing power as we
+ask the sorted queue to insert the new data by starting it's search at the end.
+No issues on a Mac.
+
+
 Florian G. Pflug <fgp [at] phlo.org>
 May 2011
 
